@@ -31,9 +31,20 @@ st.markdown("""
     }
     
     /* 隐藏顶部红线 */
-    header {visibility: hidden;}
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    
+    /* 仅在桌面端隐藏 Header (为了美观) */
+    @media (min-width: 769px) {
+        header {visibility: hidden;}
+    }
+    
+    /* 手机端必须显示 Header，否则无法点开侧边栏 */
+    @media (max-width: 768px) {
+        header {visibility: visible !important;}
+        /* 调整一下手机端 Header 的背景，让它融入我们的商务白 */
+        header {background-color: transparent !important;}
+    }
 
     /* ---------------- 卡片式容器设计 ---------------- */
     /* 所有的 st.container(border=True) 都会应用这个样式 */
