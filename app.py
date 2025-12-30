@@ -7,7 +7,7 @@ from openai import OpenAI
 from datetime import datetime
 
 # 1. 网页基础配置
-st.set_page_config(page_title="体卫艺办公助手", page_icon="�", layout="centered")
+st.set_page_config(page_title="体卫艺办公助手", page_icon="📋", layout="centered")
 
 # --- 🎨 深度美化 / CSS 设计 ---
 st.markdown("""
@@ -192,8 +192,11 @@ with st.sidebar:
 # ----------------- 模块一：领导公务单生成器 -----------------
 if mode == "📝 领导公务单自动生成器":
     
+    # 导航提示 (针对手机端用户不明显的问题)
+    st.caption("↖️ **导航提示：** 点击左上角 **>** 图标打开菜单，可切换至「学校查号台」")
+    
     # 使用容器包裹标题区域，打造卡片感
-    st.markdown("# � 体卫艺领导公务单自动生成器")
+    st.markdown("# 📋 体卫艺领导公务单自动生成器")
     st.caption("Technical Support Provided by Peipei")
     
     # 蓝色提示框 - 提示语
@@ -396,6 +399,9 @@ if mode == "📝 领导公务单自动生成器":
 
 # ----------------- 模块二：龙华学校查号台 -----------------
 else:
+    # 导航提示
+    st.caption("↖️ **导航提示：** 点击左上角 **>** 图标打开菜单，可返回「公务单生成器」")
+    
     st.markdown("### 🔍 龙华学校查号台")
     st.caption("全区学校通讯录快速查询系统")
     
