@@ -7,6 +7,7 @@ from openai import OpenAI
 from datetime import datetime
 import streamlit.components.v1 as components
 # 1. 网页基础配置
+APP_VERSION = "V1.2.1230.01"
 st.set_page_config(page_title="体卫艺办公助手", page_icon="🚀", layout="centered")
 
 # --- Mobile Optimization / Custom CSS ---
@@ -125,18 +126,23 @@ if "original_input" not in st.session_state:
 # 3. 侧边栏导航
 with st.sidebar:
     st.header("⚙️ 体卫艺办公助手")
-    st.success("● AI 核心已连接") # Changed from "逻辑已加载" to match image closer
+   # --- 从这里开始替换 (对应原 129 行) ---
+    st.success(f"● AI 核心引擎已连接 ({APP_VERSION})") 
     
-    st.info("""
-    **💡 使用小提示：** 本助手集成两大核心功能：
+    st.info(f"""
+    **💡 使用小提示：** 本助手集成三大核心功能：
     
     1. **公务单生成**：智能解析文字生成 Word。
     2. **学校查号台**：全区学校通讯录快速查询。
+    3. **智能简报生成**：AI 驱动的文稿创作中心。
     
     您可以通过下方的 **“功能切换”** 选项随时跳转。
     """)
+    
+    st.caption(f"当前版本：{APP_VERSION}")
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
     st.divider()
+    # --- 替换结束 (衔接到原 142 行) ---
     
     mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台", "✨ 智能简报生成"])
     
