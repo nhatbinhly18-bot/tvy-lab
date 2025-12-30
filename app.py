@@ -5,7 +5,7 @@ import io
 import json
 from openai import OpenAI
 from datetime import datetime
-
+import streamlit.components.v1 as components
 # 1. 网页基础配置
 st.set_page_config(page_title="体卫艺办公助手", page_icon="🚀", layout="centered")
 
@@ -20,7 +20,7 @@ st.markdown("""
     @media (min-width: 769px) {
         header {visibility: hidden;}
     }
-    
+
     /* 调整移动端内边距 */
     .block-container {
         padding-top: 1rem;
@@ -88,6 +88,17 @@ st.markdown("""
             font-size: 0.9rem !important;
         }
     }
+
+    /* 绿色按钮 (涵盖主要按钮和下载按钮) */
+    div.stButton > button[kind="primary"], div.stButton > button:last-child {
+        background-color: #28a745 !important;
+        border-color: #28a745 !important;
+        color: white !important;
+    }
+    div.stButton > button[kind="primary"]:hover, div.stButton > button:last-child:hover {
+        background-color: #218838 !important;
+        border-color: #1e7e34 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -127,7 +138,7 @@ with st.sidebar:
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
     st.divider()
     
-    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
+    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台", "✨ 智能简报生成"])
     
     st.write("") # Spacer
     if st.button("🔒 退出并锁定"):
@@ -137,7 +148,6 @@ with st.sidebar:
 
 # ----------------- 模块一：领导公务单生成器 -----------------
 if mode == "📝 领导公务单自动生成器":
-    # Custom CSS for compact layout
     # Custom CSS for compact layout
     # st.markdown("""
     # <style>
@@ -381,6 +391,13 @@ if mode == "📝 领导公务单自动生成器":
 
             except Exception as e:
                 st.error(f"生成失败：{e}")
+
+
+# ----------------- 模块三：智能简报生成 -----------------
+elif mode == "✨ 智能简报生成":
+    st.markdown("# ✨ 体卫艺 AI 简报创作中心")
+    st.info("💡 正在连接 DeepSeek V3 智慧大脑... 审核通过后，此处将直接显示对话窗口。")
+    components.iframe("https://www.baidu.com", height=750, scrolling=True)
 
 # ----------------- 模块二：龙华学校查号台 -----------------
 else:
