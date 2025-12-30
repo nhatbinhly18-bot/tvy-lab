@@ -18,17 +18,17 @@ st.markdown("""
         color: #1f2937;
     }
     
-    /* 页面背景 - 极简灰 */
+    /* 页面背景 - 更加深邃的商务灰 */
     .stApp {
-        background-color: #f3f4f6;
-        background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-        background-size: 20px 20px;
+        background-color: #f8fafc;
+        background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+        background-size: 24px 24px;
     }
 
     /* 侧边栏样式 */
     [data-testid="stSidebar"] {
         background-color: #ffffff;
-        border-right: 1px solid #e5e7eb;
+        border-right: 1px solid #e2e8f0;
     }
     
     /* 隐藏多余元素 */
@@ -40,149 +40,107 @@ st.markdown("""
         .block-container { padding-top: 2rem !important; }
     }
 
-    /* ---------------- SaaS 卡片组件 ---------------- */
-    /* 主卡片容器 */
+    /* ---------------- 👑 高级感：进化版超级卡片 ---------------- */
     div[data-testid="stVerticalBlockBorderWrapper"] > div {
         background-color: #ffffff;
-        border: 1px solid #e5e7eb !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        padding: 2rem !important;
+        border: 1px solid #d1d5db !important; /* 强化边框 */
+        border-radius: 16px !important; /* 更圆润 */
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; /* 深度阴影，产生悬浮感 */
+        padding: 2.5rem !important;
+        margin-top: 1rem;
     }
 
-    /* 标题样式 */
+    /* 顶部标题区 - 像收费软件一样的 Header */
+    .saas-header {
+        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+        padding: 2rem;
+        border-left: 6px solid #2563eb; /* 侧边品牌蓝条 */
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        box-shadow: inset 0 -1px 0 0 #e5e7eb;
+    }
+
     h1 {
-        font-size: 1.8rem !important;
-        font-weight: 800 !important;
-        color: #111827;
-        letter-spacing: -0.025em;
-        margin-bottom: 0.5rem !important;
+        font-size: 2rem !important;
+        font-weight: 850 !important;
+        color: #1e3a8a !important; /* 深蓝色 */
+        letter-spacing: -0.03em;
+        margin: 0 !important;
     }
     
-    /* 自定义徽章样式 */
+    /* 自定义徽章 */
     .saas-badge {
         display: inline-block;
         padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        background-color: #2563eb;
+        color: white;
+        margin-bottom: 0.75rem;
     }
-    .badge-primary { background-color: #dbeafe; color: #1e40af; }
     
     /* ---------------- 交互组件 ---------------- */
-    /* 输入框 */
-    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        border-radius: 8px !important;
-        border: 1px solid #d1d5db !important;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-        transition: all 0.2s;
-    }
-    .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    .stTextInput input, .stTextArea textarea {
+        border-radius: 10px !important;
+        border: 1px solid #cbd5e1 !important;
+        background-color: #fcfcfc !important;
     }
     
-    /* 按钮 - 更加扁平化商务 */
-    div.stButton > button {
-        border-radius: 8px !important;
-        font-weight: 500 !important;
-        padding: 0.6rem 1.2rem !important;
-        transition: all 0.15s ease-in-out !important;
-    }
-    
-    /* 主按钮 - 品牌蓝 */
-    div.stButton > button[kind="primary"] {
-        background-color: #2563eb !important;
-        border: 1px solid #2563eb !important;
-        color: white !important;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-    }
-    div.stButton > button[kind="primary"]:hover {
-        background-color: #1d4ed8 !important;
-    }
-
-    /* ---------------- 进度条自定义 CSS ---------------- */
+    /* 进度条美化 */
     .step-container {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 2rem;
-        position: relative;
-    }
-    .step-item {
-        flex: 1;
-        text-align: center;
-        position: relative;
-        z-index: 10;
+        margin: 2rem 0;
+        padding: 0 1rem;
     }
     .step-circle {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: #e5e7eb;
-        color: #6b7280;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px; /* 方圆感更高级 */
+        background-color: #e2e8f0;
+        color: #64748b;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-weight: 800;
         margin: 0 auto 0.5rem;
-        font-weight: bold;
-        transition: all 0.3s;
     }
     .step-active .step-circle {
         background-color: #2563eb;
         color: white;
-        box-shadow: 0 0 0 4px #dbeafe;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
-    .step-text {
-        font-size: 0.875rem;
-        color: #6b7280;
-        font-weight: 500;
-    }
-    .step-active .step-text {
-        color: #111827;
-        font-weight: 700;
-    }
-    .step-line {
-        position: absolute;
-        top: 15px;
-        left: 25%;
-        right: 25%;
-        height: 2px;
-        background-color: #e5e7eb;
-        z-index: 0;
-    }
-    
-    /* 手机端适配 */
+
     @media (max-width: 768px) {
-        div[data-testid="stVerticalBlockBorderWrapper"] > div { padding: 1rem !important; }
-        .saas-badge { display: none; } /* 手机上隐藏徽章以节省空间 */
+        div[data-testid="stVerticalBlockBorderWrapper"] > div { padding: 1.2rem !important; }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 🔒 通讯录专属密码 ---
-CONTACT_PASSWORD = "lhjy" 
-MY_API_KEY = "sk-dzsawqzsktjximglmkzyezbtyhqbysvenoxublemcgertlqp"
-BASE_URL = "https://api.siliconflow.cn/v1"
-
-# 初始化状态
-if "contacts_authenticated" not in st.session_state:
-    st.session_state.contacts_authenticated = False
-if "parseddata_doc" not in st.session_state:
-    st.session_state.parseddata_doc = None
-if "step" not in st.session_state:
-    st.session_state.step = 1
-if "polished_text" not in st.session_state:
-    st.session_state.polished_text = None
-if "original_input" not in st.session_state:
-    st.session_state.original_input = ""
-
-# 3. 侧边栏导航
-with st.sidebar:
-    st.header("⚙️ 体卫艺办公助手")
-    st.success("● 系统运行正常") 
+# --- 逻辑部分（保持不变） ---
+if mode == "📝 领导公务单自动生成器":
+    s1_class = "step-active" if st.session_state.step == 1 else ""
+    s2_class = "step-active" if st.session_state.step == 2 else ""
     
+    step_html = f"""
+    <div class="step-container">
+        <div class="step-item {s1_class}"><div class="step-circle">1</div><div class="step-text">智能填报</div></div>
+        <div class="step-item {s2_class}"><div class="step-circle">2</div><div class="step-text">确认生成</div></div>
+    </div>
+    """
+    
+    st.markdown(f"""
+    <div class="saas-header">
+        <div class="saas-badge">Enterprise Edition V2.5</div>
+        <h1>📋 体卫艺领导公务单自动生成器</h1>
+        <p style="color: #475569; margin-top: 0.5rem; font-weight: 500;">
+            龙华教育局政务专用 · 智能公文系统 | <span style="color: #2563eb;">Tech by Peipei</span>
+        </p>
+    </div>
+    {step_html}
+    """, unsafe_allow_html=True)
     st.markdown("---")
     mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
     st.markdown("---")
