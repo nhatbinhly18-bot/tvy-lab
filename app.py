@@ -7,7 +7,7 @@ from openai import OpenAI
 from datetime import datetime
 
 # 1. 网页基础配置
-st.set_page_config(page_title="体卫艺办公助手", page_icon="🚀", layout="centered")
+st.set_page_config(page_title="体卫艺办公助手", page_icon="�", layout="centered")
 
 # --- 🎨 深度美化 / CSS 设计 ---
 st.markdown("""
@@ -193,8 +193,8 @@ with st.sidebar:
 if mode == "📝 领导公务单自动生成器":
     
     # 使用容器包裹标题区域，打造卡片感
-    st.markdown("# 🚀 领导公务单自动生成器")
-    st.caption("Intelligent Official Document Generator")
+    st.markdown("# � 体卫艺领导公务单自动生成器")
+    st.caption("Technical Support Provided by Peipei")
     
     # 蓝色提示框 - 提示语
     st.info("""
