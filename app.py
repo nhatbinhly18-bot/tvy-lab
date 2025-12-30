@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from docxtpl import DocxTemplate
@@ -5,9 +6,8 @@ import io
 import json
 from openai import OpenAI
 from datetime import datetime
-import streamlit.components.v1 as components
+
 # 1. 网页基础配置
-APP_VERSION = "V1.2.1230.01"
 st.set_page_config(page_title="体卫艺办公助手", page_icon="🚀", layout="centered")
 
 # --- Mobile Optimization / Custom CSS ---
@@ -21,7 +21,7 @@ st.markdown("""
     @media (min-width: 769px) {
         header {visibility: hidden;}
     }
-
+    
     /* 调整移动端内边距 */
     .block-container {
         padding-top: 1rem;
@@ -89,17 +89,6 @@ st.markdown("""
             font-size: 0.9rem !important;
         }
     }
-
-    /* 绿色按钮 (涵盖主要按钮和下载按钮) */
-    div.stButton > button[kind="primary"], div.stButton > button:last-child {
-        background-color: #28a745 !important;
-        border-color: #28a745 !important;
-        color: white !important;
-    }
-    div.stButton > button[kind="primary"]:hover, div.stButton > button:last-child:hover {
-        background-color: #218838 !important;
-        border-color: #1e7e34 !important;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -126,25 +115,20 @@ if "original_input" not in st.session_state:
 # 3. 侧边栏导航
 with st.sidebar:
     st.header("⚙️ 体卫艺办公助手")
-   # --- 从这里开始替换 (对应原 129 行) ---
-    st.success(f"● AI 核心引擎已连接 ({APP_VERSION})") 
+    st.success("● AI 核心已连接") # Changed from "逻辑已加载" to match image closer
     
-    st.info(f"""
-    **💡 使用小提示：** 本助手集成三大核心功能：
+    st.info("""
+    **💡 使用小提示：** 本助手集成两大核心功能：
     
     1. **公务单生成**：智能解析文字生成 Word。
     2. **学校查号台**：全区学校通讯录快速查询。
-    3. **智能简报生成**：AI 驱动的文稿创作中心。
     
     您可以通过下方的 **“功能切换”** 选项随时跳转。
     """)
-    
-    st.caption(f"当前版本：{APP_VERSION}")
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
     st.divider()
-    # --- 替换结束 (衔接到原 142 行) ---
     
-    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台", "✨ 智能简报生成"])
+    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
     
     st.write("") # Spacer
     if st.button("🔒 退出并锁定"):
@@ -155,57 +139,55 @@ with st.sidebar:
 # ----------------- 模块一：领导公务单生成器 -----------------
 if mode == "📝 领导公务单自动生成器":
     # Custom CSS for compact layout
-    # st.markdown("""
-    # <style>
-    #     /* 完全去除所有间距 */
-    #     .main .block-container {
-    #         padding-top: 0.5rem;
-    #         padding-bottom: 0.5rem;
-    #     }
-    #     
-    #     /* 标题完全无间距 */
-    #     h1, h2, h3 {
-    #         margin-top: 0 !important;
-    #         margin-bottom: 0 !important;
-    #         padding-top: 0 !important;
-    #         padding-bottom: 0 !important;
-    #     }
-    #     
-    #     /* 段落完全无间距 */
-    #     p {
-    #         margin-top: 0 !important;
-    #         margin-bottom: 0 !important;
-    #         padding-top: 0 !important;
-    #         padding-bottom: 0 !important;
-    #     }
-    #     
-    #     /* info/warning 框最小间距 */
-    #     .stAlert {
-    #         margin-top: 0.2rem !important;
-    #         margin-bottom: 0.2rem !important;
-    #         padding: 0.5rem 1rem !important;
-    #     }
-    #     
-    #     /* 所有元素间距为0 */
-    #     .element-container {
-    #         margin-top: 0 !important;
-    #         margin-bottom: 0 !important;
-    #         padding-top: 0 !important;
-    #         padding-bottom: 0 !important;  
-    #     }
-    #     
-    #     /* 绿色按钮样式 */
-    #     div.stButton > button:first-child[kind="primary"] {
-    #         background-color: #28a745;
-    #         border-color: #28a745;
-    #         color: white;
-    #     }
-    #     div.stButton > button:first-child[kind="primary"]:hover {
-    #         background-color: #218838;
-    #         border-color: #1e7e34;
-    #     }
-    # </style>
-    # """, unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+        /* 完全去除所有间距 */
+        .main .block-container {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* 标题完全无间距 */
+        h1, h2, h3 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        /* 段落完全无间距 */
+        p {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        
+        /* info/warning 框最小间距 */
+        .stAlert {
+            margin-top: 0.2rem !important;
+            margin-bottom: 0.2rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+        
+        /* 所有元素间距为0 */
+        .element-container {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* 绿色按钮样式 */
+        div.stButton > button:first-child[kind="primary"] {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        div.stButton > button:first-child[kind="primary"]:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+    </style>
+    """, unsafe_allow_html=True)
     # 醒目的功能切换提示（方便年长用户）
     st.warning("👆 点击左上角 **>>** 可切换到「查号台」")
     st.markdown("# 🚀 领导公务单自动生成器")
@@ -249,36 +231,21 @@ if mode == "📝 领导公务单自动生成器":
                 
                 with st.spinner("正在解析要素并润色公文语言...（通常需要 5-15 秒，请耐心等待）"):
                     
-                    # 标准人名库（用于纠正语音转文字的谐音错误）
-                    name_corrections = {
-                        "林芝": "杨灵芝", "杨林芝": "杨灵芝",
-                        "陈海湾": "陈海万", "陈海完": "陈海万",
-                        "尹泽力": "尹泽利", "尹则利": "尹泽利",
-                        "文量方": "文良方", "温良方": "文良方",
-                        "刘兵": "刘冰",
-                        "梁永育": "梁永誉",
-                        "方梦仪": "方梦懿"
-                    }
-                    
                     full_prompt = f"""
                     你现在是龙华教育局资深笔杆子。请根据以下用户的大白话描述，解析出公文要素，并对【理由背景】和【议程】部分进行专业润色。
                     
                     【当前日期参考】：今天是 {current_date_str} (星期{weekday})。
                     【用户输入】：{user_input}
                     
-                    【标准人名库】（请优先匹配）：
-                    杨灵芝、尹泽利、文良方、孙沛、刘冰、杨帆、陈海万、路旭阳、王轩、王燕、李桂情、甘月琴、方梦懿、吴正光、李长生、梁永誉、刘喜菊
-                    
                     【解析与润色要求】：
-                    1. **人名纠错**：如果用户输入的人名与标准人名库相似（如"林芝"应为"杨灵芝"，"陈海湾"应为"陈海万"），请自动纠正为标准名字。
-                    2. **content (理由背景)**：将用户的背景描述转化为"为落实...要求，推进...发展"等公文规范用语。只有动宾结构和语序调整，严禁杜撰。
-                    3. **agenda (详细议程)**：**固定输出以下三项，顺序不可变**：["专题汇报", "座谈交流", "领导讲话"]。**严禁添加、删除或修改这三项**，无论用户输入什么。
-                    4. **time (时间)**：必须将"明天"、"后天"、"周三"等相对时间**计算为具体的年月日**（格式：YYYY年MM月DD日 HH:MM）。禁止直接写"明天"或"下周"。
-                    5. **duration (时长)**：统一计算为"X小时"或"X.5小时"（如1.5小时），**不要用分钟**。
-                    6. **contact (公务对接人)**：提取人名（优先从标准人名库匹配），若无则默认为"孙沛"。
-                    7. **dist_leader (区领导)** / **bur_leader (局领导)**：准确提取拟请出席的领导职务/姓名（如"灵芝主任"应识别为"杨灵芝"）。**严禁添加"教育发展中心"等部门前缀**，直接写姓名加职务即可。
-                    8. **others (参加单位)**：提取建议参加的部门或单位。
-                    9. **其他字段**：title(活动名称), place(地点), num(人数), projector(投影仪: ☑是/☐否)。
+                    1. **content (理由背景)**：将用户的背景描述转化为"为落实...要求，推进...发展"等公文规范用语。只有动宾结构和语序调整，严禁杜撰。
+                    2. **agenda (详细议程)**：**固定输出以下三项，顺序不可变**：["专题汇报", "座谈交流", "领导讲话"]。**严禁添加、删除或修改这三项**，无论用户输入什么。
+                    3. **time (时间)**：必须将"明天"、"后天"、"周三"等相对时间**计算为具体的年月日**（格式：YYYY年MM月DD日 HH:MM）。禁止直接写"明天"或"下周"。
+                    4. **duration (时长)**：统一计算为"X小时"或"X.5小时"（如1.5小时），**不要用分钟**。
+                    5. **contact (公务对接人)**：提取人名，若无则默认为"孙沛"。
+                    6. **dist_leader (区领导)** / **bur_leader (局领导)**：准确提取拟请出席的领导职务/姓名（如"灵芝主任"）。**严禁添加"教育发展中心"等部门前缀**，直接写姓名加职务即可。
+                    7. **others (参加单位)**：提取建议参加的部门或单位。
+                    8. **其他字段**：title(活动名称), place(地点), num(人数), projector(投影仪: ☑是/☐否)。
                     
                     必须以 JSON 格式严格输出，包含以下字段：
                     title, content, agenda, time, place, num, contact, projector, duration, dist_leader, bur_leader, others。
@@ -367,10 +334,11 @@ if mode == "📝 领导公务单自动生成器":
         col_final_back, col_final_down = st.columns([1, 2])
         with col_final_back:
             if st.button("⬅️ 返回上一步"):
-                 st.session_state.step = 1
+                 st.session_state.step = 2
                  st.rerun()
 
         with col_final_down:
+            # 准备文件数据
             try:
                 final_data = {
                     "title": t, "content": c, "agenda": a, "time": tm, 
@@ -382,28 +350,30 @@ if mode == "📝 领导公务单自动生成器":
                 bio = io.BytesIO()
                 tpl.save(bio)
                 
+                # 生成文件名: MMDD_领导_体卫艺劳科_标题.docx
                 mmdd = datetime.now().strftime("%m%d")
+                # 优先取局领导，如果没有则取区领导，再没有则默认"领导"
                 leader_name = bur_l.strip() if bur_l.strip() else (dist_l.strip() if dist_l.strip() else "领导")
+                # 清理可能的多余字符（如顿号分隔的多个领导，只取第一个）
                 leader_name = leader_name.split('、')[0] if '、' in leader_name else leader_name
+                
                 filename = f"{mmdd}_{leader_name}_体卫艺劳科_{t}.docx"
                 
-                # 核心：直接使用原生按钮，触发微信的系统拦截机制
+                # 绿色下载按钮 - 直接下载
                 st.download_button(
-                    label="💾 确认无误，导出 Word",
-                    data=bio.getvalue(),
-                    file_name=filename,
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    "💾 确认无误，导出 Word", 
+                    bio.getvalue(), 
+                    filename, 
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    type="primary"
                 )
-
+                # 显示文件名和下载成功提示
+                st.success(f"🎉 **文件已生成！** 点击上方按钮下载")
+                st.warning("⚠️ **微信用户请注意：** 微信内无法下载文件\n\n💡 **建议操作：**\n1. 记住您填写的内容\n2. 点击右上角 ⋮ → 选择「在浏览器中打开」\n3. 在浏览器中重新填写（很快）\n4. 点击下载按钮即可成功下载")
+                st.info(f"📄 **文件名：** `{filename}`")
             except Exception as e:
                 st.error(f"生成失败：{e}")
 
-
-# ----------------- 模块三：智能简报生成 -----------------
-elif mode == "✨ 智能简报生成":
-    st.markdown("# ✨ 体卫艺 AI 简报创作中心")
-    st.info("💡 正在连接 DeepSeek V3 智慧大脑... 审核通过后，此处将直接显示对话窗口。")
-    components.iframe("https://www.baidu.com", height=750, scrolling=True)
 
 # ----------------- 模块二：龙华学校查号台 -----------------
 else:
