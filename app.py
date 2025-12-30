@@ -9,235 +9,267 @@ from datetime import datetime
 # 1. 网页基础配置
 st.set_page_config(page_title="体卫艺办公助手", page_icon="📋", layout="centered")
 
-# --- 🎨 SaaS 级深度美化 / CSS 设计 ---
+# --- 🎨 深度美化 / CSS 设计 ---
 st.markdown("""
 <style>
-    /* 全局重置与字体 */
+    /* 全局字体 */
     html, body, [class*="css"] {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-        color: #1f2937;
+        font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     }
     
-    /* 页面背景 - 更加深邃的商务灰 */
+    /* 页面背景 - 商务风云雾白 */
     .stApp {
-        background-color: #f8fafc;
-        background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
-        background-size: 24px 24px;
+        background-color: #f7f9fc;
+        background-image: linear-gradient(135deg, #f7f9fc 0%, #eceff4 100%);
     }
 
     /* 侧边栏样式 */
     [data-testid="stSidebar"] {
         background-color: #ffffff;
-        border-right: 1px solid #e2e8f0;
+        border-right: 1px solid #e1e4e8;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.01);
     }
     
-    /* 隐藏多余元素 */
+    /* 隐藏顶部红线 */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    @media (min-width: 769px) { header {visibility: hidden;} }
-    @media (max-width: 768px) { 
-        header {visibility: visible !important; background-color: transparent !important;}
-        .block-container { padding-top: 2rem !important; }
+    
+    /* 仅在桌面端隐藏 Header (为了美观) */
+    @media (min-width: 769px) {
+        header {visibility: hidden;}
+    }
+    
+    /* 手机端必须显示 Header，否则无法点开侧边栏 */
+    @media (max-width: 768px) {
+        header {visibility: visible !important;}
+        /* 调整一下手机端 Header 的背景，让它融入我们的商务白 */
+        header {background-color: transparent !important;}
     }
 
-    /* ---------------- 👑 高级感：进化版超级卡片 ---------------- */
+    /* ---------------- 卡片式容器设计 ---------------- */
+    /* 所有的 st.container(border=True) 都会应用这个样式 */
     div[data-testid="stVerticalBlockBorderWrapper"] > div {
         background-color: #ffffff;
-        border: 1px solid #d1d5db !important; /* 强化边框 */
-        border-radius: 16px !important; /* 更圆润 */
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; /* 深度阴影，产生悬浮感 */
-        padding: 2.5rem !important;
-        margin-top: 1rem;
+        border: 1px solid #e1e4e8 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        padding: 1.5rem !important;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
-
-    /* 顶部标题区 - 像收费软件一样的 Header */
-    .saas-header {
-        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-        padding: 2rem;
-        border-left: 6px solid #2563eb; /* 侧边品牌蓝条 */
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: inset 0 -1px 0 0 #e5e7eb;
-    }
-
+    
+    /* ---------------- 标题与文字 ---------------- */
     h1 {
-        font-size: 2rem !important;
-        font-weight: 850 !important;
-        color: #1e3a8a !important; /* 深蓝色 */
-        letter-spacing: -0.03em;
-        margin: 0 !important;
+        color: #0d47a1; /* 商务深蓝 */
+        font-weight: 700 !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.5rem !important;
     }
     
-    /* 自定义徽章 */
-    .saas-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        background-color: #2563eb;
-        color: white;
-        margin-bottom: 0.75rem;
+    h2, h3 {
+        color: #1565c0;
+        font-weight: 600 !important;
     }
     
-    /* ---------------- 交互组件 ---------------- */
-    .stTextInput input, .stTextArea textarea {
-        border-radius: 10px !important;
-        border: 1px solid #cbd5e1 !important;
-        background-color: #fcfcfc !important;
-    }
-    
-    /* 进度条美化 */
-    .step-container {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0 1rem;
-    }
-    .step-circle {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px; /* 方圆感更高级 */
-        background-color: #e2e8f0;
-        color: #64748b;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        margin: 0 auto 0.5rem;
-    }
-    .step-active .step-circle {
-        background-color: #2563eb;
-        color: white;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    .stMarkdown p {
+        color: #424242;
+        line-height: 1.6;
     }
 
+    /* ---------------- 交互组件美化 ---------------- */
+    
+    /* 输入框优化 */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        border-radius: 8px !important;
+        border: 1px solid #cfd8dc !important;
+        background-color: #fcfcfc !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #1976d2 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;
+    }
+    
+    /* 按钮美化 - 圆角 + 阴影 */
+    div.stButton > button {
+        border-radius: 20px !important; /* 圆角胶囊样式 */
+        font-weight: 600 !important;
+        padding: 0.5rem 1.5rem !important;
+        border: none !important;
+        transition: all 0.2s ease !important;
+    }
+    
+    /* 主要按钮 (Primary) - 商务蓝 */
+    div.stButton > button[kind="primary"] {
+        background: linear-gradient(90deg, #1976d2 0%, #1565c0 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 6px rgba(21, 101, 192, 0.2) !important;
+    }
+    
+    div.stButton > button[kind="primary"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(21, 101, 192, 0.3) !important;
+    }
+    
+    /* 下载按钮 (Secondary) - 保持醒目但和谐 */
+    div.stButton > button[kind="secondary"] {
+        background-color: #ffffff !important;
+        color: #1565c0 !important;
+        border: 1px solid #1565c0 !important;
+    }
+
+    /* ---------------- 表格与手机端优化 ---------------- */
+    /* 查号台表格优化 */
+    [data-testid="stDataFrame"] {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+    }
+    
+    /* 手机端间距调整 */
     @media (max-width: 768px) {
-        div[data-testid="stVerticalBlockBorderWrapper"] > div { padding: 1.2rem !important; }
+        .block-container {
+            padding-top: 2rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        h1 { font-size: 1.5rem !important; }
+        div[data-testid="stVerticalBlockBorderWrapper"] > div {
+            padding: 1rem !important; /* 手机端卡片内边距减小 */
+        }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 逻辑部分（保持不变） ---
-if mode == "📝 领导公务单自动生成器":
-    s1_class = "step-active" if st.session_state.step == 1 else ""
-    s2_class = "step-active" if st.session_state.step == 2 else ""
+# --- 🔒 通讯录专属密码 ---
+CONTACT_PASSWORD = "lhjy" 
+
+# 2. 核心配置
+MY_API_KEY = "sk-dzsawqzsktjximglmkzyezbtyhqbysvenoxublemcgertlqp"
+BASE_URL = "https://api.siliconflow.cn/v1"
+
+# 初始化状态
+if "contacts_authenticated" not in st.session_state:
+    st.session_state.contacts_authenticated = False
+if "parseddata_doc" not in st.session_state:
+    st.session_state.parseddata_doc = None
+# 新增：两步流程的状态管理
+if "step" not in st.session_state:
+    st.session_state.step = 1  # 1=输入, 2=确认润色, 3=确认字段
+if "polished_text" not in st.session_state:
+    st.session_state.polished_text = None
+if "original_input" not in st.session_state:
+    st.session_state.original_input = ""
+
+# 3. 侧边栏导航
+with st.sidebar:
+    st.header("⚙️ 体卫艺办公助手")
+    st.success("● AI 核心引擎已连接") 
     
-    step_html = f"""
-    <div class="step-container">
-        <div class="step-item {s1_class}"><div class="step-circle">1</div><div class="step-text">智能填报</div></div>
-        <div class="step-item {s2_class}"><div class="step-circle">2</div><div class="step-text">确认生成</div></div>
-    </div>
-    """
-    
-    st.markdown(f"""
-    <div class="saas-header">
-        <div class="saas-badge">Enterprise Edition V2.5</div>
-        <h1>📋 体卫艺领导公务单自动生成器</h1>
-        <p style="color: #475569; margin-top: 0.5rem; font-weight: 500;">
-            龙华教育局政务专用 · 智能公文系统 | <span style="color: #2563eb;">Tech by Peipei</span>
-        </p>
-    </div>
-    {step_html}
-    """, unsafe_allow_html=True)
     st.markdown("---")
+    
     mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
+    
     st.markdown("---")
-    st.info("**💡 帮助中心**\n\n如需支持，请联系体卫艺科。")
+    st.info("""
+    **💡 助手功能说明：**
+    
+    1. **公务单生成**：
+       语音口语 → 规范公文Word
+       
+    2. **学校查号台**：
+       全区通讯录一键查询
+    """)
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
     
-    st.write("") 
-    if st.button("🔒 安全退出"):
+    st.write("") # Spacer
+    if st.button("🔒 退出并锁定系统"):
         st.session_state.contacts_authenticated = False
         st.session_state.parseddata_doc = None
         st.rerun()
 
-# ----------------- 模块一：领导公务单生成器 (SaaS 版) -----------------
+# ----------------- 模块一：领导公务单生成器 -----------------
 if mode == "📝 领导公务单自动生成器":
     
-    # 顶部导航指引
-    st.caption("↖️ **导航：** 点击左上角 **>** 可切换功能")
+    # 导航提示 (针对手机端用户不明显的问题)
+    st.caption("↖️ **导航提示：** 点击左上角 **>** 图标打开菜单，可切换至「学校查号台」")
     
-    # 动态渲染进度条 HTML
-    s1_class = "step-active" if st.session_state.step == 1 else ""
-    s2_class = "step-active" if st.session_state.step == 2 else ""
+    # 使用容器包裹标题区域，打造卡片感
+    st.markdown("# 📋 体卫艺领导公务单自动生成器")
+    st.caption("Technical Support Provided by Peipei")
     
-    step_html = f"""
-    <div class="step-container">
-        <div class="step-line"></div>
-        <div class="step-item {s1_class}">
-            <div class="step-circle">1</div>
-            <div class="step-text">智能填报</div>
-        </div>
-        <div class="step-item {s2_class}">
-            <div class="step-circle">2</div>
-            <div class="step-text">确认与生成</div>
-        </div>
-    </div>
-    """
-    
-    # Hero Header Area
-    st.markdown(f"""
-    <div style="margin-bottom: 2rem;">
-        <span class="saas-badge badge-primary">AI Powered V2.0</span>
-        <h1>📋 体卫艺领导公务单自动生成器</h1>
-        <p style="color: #6b7280; margin-top: -10px;">Technical Support Provided by Peipei</p>
-    </div>
-    {step_html}
-    """, unsafe_allow_html=True)
-    
-    # --- BLUE INFO BOX ---
+    # 蓝色提示框 - 提示语
     st.info("""
-    **💡 智能指令范例：**
-    “明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。”
+    **💡 智能提示：** 请一次性说清：时间、地点、会议名称、人数、对接人、领导、参加部门及议程。
+    
+    **🗣️ 参考范例：** “明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。”
     """)
 
-    # --- Step 1: Input ---
+    # --- 第一步：输入与润色 ---
     if st.session_state.step == 1:
+        # 输入区卡片
         with st.container(border=True):
-            st.subheader("✍️ 描述活动")
-            st.caption("请直接粘贴语音转文字内容，AI 助手将自动提取关键要素。")
+            st.subheader("1️⃣ 描述活动信息")
+            st.caption("支持直接粘贴语音转文字的内容，AI 将自动提取要素。")
             
             user_input = st.text_area(
-                "input_area", 
-                height=160, 
-                placeholder="在此输入...", 
+                "请在此输入...", 
+                height=150, 
+                placeholder="请点击此处粘贴或输入内容...", 
                 key="input_doc", 
                 label_visibility="collapsed"
             )
         
-        st.write("")
-        col_btn, _ = st.columns([1, 0.2])
-        if col_btn.button("✨ 开始智能分析", type="primary", use_container_width=True):
+        st.write("") # 间距
+        if st.button("✨ 立即智能填表并生成 Word", type="primary", use_container_width=True):
             if not user_input:
-                st.warning("⚠️ 请输入内容")
+                st.warning("⚠️ 内容不能为空，请输入活动描述。")
             else:
                 client = OpenAI(api_key=MY_API_KEY, base_url=BASE_URL)
                 st.session_state.original_input = user_input
+                
+                # 获取当前日期用于计算相对时间
                 current_date_str = datetime.now().strftime("%Y年%m月%d日")
                 weekday = datetime.now().strftime("%w")
                 
-                with st.spinner("🔄 AI 正在分析语义并生成公文..."):
+                with st.spinner("🤖 正在解析要素并润色公文语言..."):
+                    
+                    # 标准人名库（用于纠正语音转文字的谐音错误）
                     name_corrections = {
-                        "林芝": "杨灵芝", "杨林芝": "杨灵芝", "陈海湾": "陈海万", "陈海完": "陈海万",
-                        "尹泽力": "尹泽利", "尹则利": "尹泽利", "文量方": "文良方", "温良方": "文良方",
-                        "刘兵": "刘冰", "梁永育": "梁永誉", "方梦仪": "方梦懿"
+                        "林芝": "杨灵芝", "杨林芝": "杨灵芝",
+                        "陈海湾": "陈海万", "陈海完": "陈海万",
+                        "尹泽力": "尹泽利", "尹则利": "尹泽利",
+                        "文量方": "文良方", "温良方": "文良方",
+                        "刘兵": "刘冰",
+                        "梁永育": "梁永誉",
+                        "方梦仪": "方梦懿"
                     }
+                    
                     full_prompt = f"""
                     你现在是龙华教育局资深笔杆子。请根据以下用户的大白话描述，解析出公文要素，并对【理由背景】和【议程】部分进行专业润色。
+                    
                     【当前日期参考】：今天是 {current_date_str} (星期{weekday})。
                     【用户输入】：{user_input}
+                    
+                    【标准人名库】（请优先匹配）：
+                    杨灵芝、尹泽利、文良方、孙沛、刘冰、杨帆、陈海万、路旭阳、王轩、王燕、李桂情、甘月琴、方梦懿、吴正光、李长生、梁永誉、刘喜菊
+                    
                     【解析与润色要求】：
-                    1. **人名纠错**：如果用户输入的人名与标准人名库相似（如"林芝"应为"杨灵芝"），请自动纠正。
-                    2. **content (理由背景)**：将用户的背景描述转化为"为落实...要求，推进...发展"等公文规范用语。
-                    3. **agenda (详细议程)**：**固定输出以下三项**：["专题汇报", "座谈交流", "领导讲话"]。
-                    4. **time (时间)**：必须将"明天"等相对时间**计算为具体的年月日**。
-                    5. **duration (时长)**：统一计算为"X小时"。
-                    6. **contact (公务对接人)**：提取人名，若无则默认为"孙沛"。
-                    7. **dist_leader/bur_leader**：准确提取拟请出席的领导，不加部门前缀。
-                    必须以 JSON 格式输出: title, content, agenda, time, place, num, contact, projector, duration, dist_leader, bur_leader, others。
+                    1. **人名纠错**：如果用户输入的人名与标准人名库相似（如"林芝"应为"杨灵芝"，"陈海湾"应为"陈海万"），请自动纠正为标准名字。
+                    2. **content (理由背景)**：将用户的背景描述转化为"为落实...要求，推进...发展"等公文规范用语。只有动宾结构和语序调整，严禁杜撰。
+                    3. **agenda (详细议程)**：**固定输出以下三项，顺序不可变**：["专题汇报", "座谈交流", "领导讲话"]。**严禁添加、删除或修改这三项**，无论用户输入什么。
+                    4. **time (时间)**：必须将"明天"、"后天"、"周三"等相对时间**计算为具体的年月日**（格式：YYYY年MM月DD日 HH:MM）。禁止直接写"明天"或"下周"。
+                    5. **duration (时长)**：统一计算为"X小时"或"X.5小时"（如1.5小时），**不要用分钟**。
+                    6. **contact (公务对接人)**：提取人名（优先从标准人名库匹配），若无则默认为"孙沛"。
+                    7. **dist_leader (区领导)** / **bur_leader (局领导)**：准确提取拟请出席的领导职务/姓名（如"灵芝主任"应识别为"杨灵芝"）。**严禁添加"教育发展中心"等部门前缀**，直接写姓名加职务即可。
+                    8. **others (参加单位)**：提取建议参加的部门或单位。
+                    9. **其他字段**：title(活动名称), place(地点), num(人数), projector(投影仪: ☑是/☐否)。
+                    
+                    必须以 JSON 格式严格输出，包含以下字段：
+                    title, content, agenda, time, place, num, contact, projector, duration, dist_leader, bur_leader, others。
                     """
+                    
                     try:
                         chat_completion = client.chat.completions.create(
                             model="Qwen/Qwen2.5-7B-Instruct", 
@@ -246,79 +278,91 @@ if mode == "📝 领导公务单自动生成器":
                             timeout=30 
                         )
                         result = json.loads(chat_completion.choices[0].message.content)
-                        # 字段健壮性
-                        for f in ["title", "content", "agenda", "time", "contact"]:
-                            if f not in result: result[f] = ""
+                        
+                        # 字段健壮性处理
+                        required_fields = ["title", "content", "agenda", "time", "place", "num", "contact"]
+                        for field in required_fields:
+                            if field not in result:
+                                result[field] = ""
+                        
                         st.session_state.parseddata_doc = result
-                        st.session_state.step = 2
+                        st.session_state.step = 2  # 跳到确认表单
                         st.rerun()
+                        
+                    except json.JSONDecodeError:
+                         st.error("❌ AI 解析返回格式有误，请尝试补充细节后重试。")
+                    except TimeoutError:
+                        st.error("⏱️ 请求超时，网络可能较慢。请稍后重试或简化输入内容。")
                     except Exception as e:
                         st.error(f"❌ 解析出错：{str(e)}")
 
-    # --- Step 2: Confirmation ---
+    # --- 第二步：确认所有字段 ---
     elif st.session_state.step == 2 and st.session_state.parseddata_doc:
         d = st.session_state.parseddata_doc
         
+        # 预览区卡片
         with st.container(border=True):
-            st.subheader("📝 确认详情")
+            st.subheader("2️⃣ 核心要素预览与微调")
+            st.markdown("**📌 申报部门：体卫艺劳科**") 
             
-            # Form Layout
-            t = st.text_input("活动名称", d.get("title", ""))
-            c = st.text_area("背景/理由", d.get("content", ""), height=100)
+            t = st.text_input("📝 政务活动名称", d.get("title", ""))
+            c = st.text_area("📄 政务活动申请理由、背景", d.get("content", ""), height=100)
             
+            # 处理 agenda
             agenda_val = d.get("agenda", "")
             if isinstance(agenda_val, list):
                 agenda_val = "\n".join([f"{i+1}. {item}" for i, item in enumerate(agenda_val)])
-            if not agenda_val: agenda_val = "1. 专题汇报\n2. 座谈交流\n3. 领导讲话"
-            a = st.text_area("会议议程", agenda_val, height=120)
+            if not agenda_val:
+                agenda_val = "1. 专题汇报\n2. 座谈交流\n3. 领导讲话"
+            a = st.text_area("📋 议程", agenda_val, height=120)
             
-            st.write("---")
-            c1, c2 = st.columns(2)
-            with c1:
-                tm = st.text_input("开始时间", d.get("time", ""))
-                dr_val = str(d.get("duration", "1小时"))
-                if "小时" not in dr_val: dr_val += "小时"
-                dr = st.text_input("会议时长", dr_val)
-            with c2:
-                st.text_input("仅供参考", "时间不可调整", disabled=True)
-                ct = st.text_input("对接人", d.get("contact", "孙沛"))
+            st.divider() # 分割线
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                tm = st.text_input("⏰ 时间", d.get("time", ""))
                 
-            c3, c4, c5 = st.columns([2, 1, 1])
-            with c3: pl = st.text_input("地点", d.get("place", ""))
-            with c4: nm = st.text_input("人数", d.get("num", ""))
-            with c5: pj = st.selectbox("投影", ["☑使用", "☐不使用"], index=0 if "是" in str(d.get("projector")) else 1)
-            
-            st.write("---")
-            st.markdown("**领导出席**")
-            dl = st.text_input("区领导", d.get("dist_leader", ""))
-            bl = st.text_input("局领导", d.get("bur_leader", ""))
-            oth = st.text_input("建议参加部门", d.get("others") or "体卫艺劳科")
-            st.caption("ℹ️ 说明：请于活动前一周周四下班前提交。")
+                # 确保时长有单位
+                duration_val = d.get("duration", "1小时")
+                duration_val = str(duration_val) if duration_val else "1小时"
+                if "小时" not in duration_val:
+                    duration_val = f"{duration_val}小时"
+                dr = st.text_input("⏳ 会议时长", duration_val)
+                
+            with col2:
+                st.text_input("🚫 时间调整", "不可调整", disabled=True) 
+                ct = st.text_input("👤 公务对接人", d.get("contact", "孙沛"))
 
-        # Action Buttons
-        col_b, col_d = st.columns([1, 2])
-        with col_b:
-            if st.button("⬅️ 修改信息"):
+            col3, col4, col5 = st.columns([2, 1, 1])
+            with col3:
+                pl = st.text_input("📍 地点", d.get("place", ""))
+            with col4:
+                nm = st.text_input("👥 人数", d.get("num", ""))
+            with col5:
+                pj = st.selectbox("📽️ 投影仪", ["☑使用", "☐不使用"], index=0 if "是" in str(d.get("projector")) else 1)
+            
+            st.divider()
+            st.markdown("**👑 领导出席**")
+            dist_l = st.text_input("1. 拟请出席的区领导", d.get("dist_leader", ""))
+            bur_l = st.text_input("2. 拟请办公室协调出席的局领导", d.get("bur_leader", ""))
+            
+            st.divider()
+            oth = st.text_input("🏛️ 建议参加单位(部门)", d.get("others") or "体卫艺劳科")
+            
+            st.caption("ℹ️ 说明：此表请于政务活动前一周星期四下班前交办公室登记汇总。")
+
+        col_final_back, col_final_down = st.columns([1, 2])
+        with col_final_back:
+            if st.button("⬅️ 返回修改"):
                  st.session_state.step = 1
                  st.rerun()
 
-        with col_d:
+        with col_final_down:
             try:
-                # 绿色下载按钮样式注入
-                st.markdown("""
-                <style>
-                div.stButton > button:nth-last-child(1) {
-                    background-color: #10b981 !important;
-                    border-color: #10b981 !important;
-                    color: white !important;
-                }
-                </style>
-                """, unsafe_allow_html=True)
-                
                 final_data = {
                     "title": t, "content": c, "agenda": a, "time": tm, 
                     "duration": dr, "place": pl, "num": nm, "contact": ct, 
-                    "projector": pj, "dist_leader": dl, "bur_leader": bl, "others": oth
+                    "projector": pj, "dist_leader": dist_l, "bur_leader": bur_l, "others": oth
                 }
                 tpl = DocxTemplate("申报单模板.docx")
                 tpl.render(final_data)
@@ -326,50 +370,70 @@ if mode == "📝 领导公务单自动生成器":
                 tpl.save(bio)
                 
                 mmdd = datetime.now().strftime("%m%d")
-                leader_name = bl.strip() if bl.strip() else (dl.strip() if dl.strip() else "领导")
+                leader_name = bur_l.strip() if bur_l.strip() else (dist_l.strip() if dist_l.strip() else "领导")
                 leader_name = leader_name.split('、')[0] if '、' in leader_name else leader_name
                 filename = f"{mmdd}_{leader_name}_体卫艺劳科_{t}.docx"
                 
+                # 注入自定义样式，让下载按钮在不改变原生type的情况下变色
+                st.markdown("""
+                <style>
+                    /* 定位最后一个按钮（通常是下载按钮，因为返回按钮在它前面） */
+                    div.stButton > button:nth-last-child(1) {
+                         background-color: #2e7d32 !important; /* 绿色 */
+                         color: white !important;
+                         border: none !important;
+                    }
+                </style>
+                """, unsafe_allow_html=True)
+                
+                # 核心：直接使用原生按钮，触发微信的系统拦截机制 - 绝对不动
                 st.download_button(
-                    label="� 导出正式公文 (Word)",
+                    label="💾 确认无误，导出 Word",
                     data=bio.getvalue(),
                     file_name=filename,
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
+
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"生成失败：{e}")
 
 # ----------------- 模块二：龙华学校查号台 -----------------
 else:
-    st.caption("↖️ **导航：** 点击左上角 **>** 可切换功能")
+    # 导航提示
+    st.caption("↖️ **导航提示：** 点击左上角 **>** 图标打开菜单，可返回「公务单生成器」")
+    
     st.markdown("### 🔍 龙华学校查号台")
     st.caption("全区学校通讯录快速查询系统")
     
     if not st.session_state.contacts_authenticated:
+        # 登录卡片
         with st.container(border=True):
-            st.info("🔒 访问权限验证")
-            pwd = st.text_input("请输入访问密码", type="password")
-            if st.button("解锁系统", type="primary", use_container_width=True):
+            st.info("🔒 内部数据访问受限")
+            pwd = st.text_input("请输入授权密码", type="password", help="请向管理员获取密码")
+            if st.button("验证登录", type="primary", use_container_width=True):
                 if pwd == CONTACT_PASSWORD:
                     st.session_state.contacts_authenticated = True
                     st.rerun()
                 else:
-                    st.error("❌ 密码错误")
+                    st.error("❌ 密码错误，请重试。")
         st.stop()
 
     @st.cache_data
     def load_contacts():
-        try: return pd.read_csv('龙华中小学校通讯录（含幼儿园）.csv', encoding='utf-8-sig').fillna('无')
-        except: return pd.read_csv('龙华中小学校通讯录（含幼儿园）.csv', encoding='gbk').fillna('无')
+        try:
+            return pd.read_csv('龙华中小学校通讯录（含幼儿园）.csv', encoding='utf-8-sig').fillna('无')
+        except:
+            return pd.read_csv('龙华中小学校通讯录（含幼儿园）.csv', encoding='gbk').fillna('无')
 
     df = load_contacts()
     
+    # 搜索框卡片
     with st.container(border=True):
-        q = st.text_input("🔎 全文检索", placeholder="搜索学校、姓名...")
+        q = st.text_input("🔎 快速搜索", placeholder="输入学校名或人名关键词（如：龙华中学 或 张三）...")
         
     if q:
         mask = df.apply(lambda r: any(q.lower() in str(v).lower() for v in r.values), axis=1)
-        st.success(f"找到 {len(df[mask])} 条相关结果")
+        st.write(f"📊 搜索结果：找到 {len(df[mask])} 条记录")
         st.dataframe(df[mask], use_container_width=True, hide_index=True)
     else:
-        st.caption("👆 在上方输入关键词开始搜索")
+        st.caption("👆 在上方输入关键词开始搜索，支持模糊匹配。")
