@@ -49,37 +49,6 @@ st.markdown("""
         padding: 2.5rem !important;
         margin-top: 1rem;
     }
-
-    /* 顶部标题区 - 像收费软件一样的 Header */
-    .saas-header {
-        background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-        padding: 2rem;
-        border-left: 6px solid #2563eb; /* 侧边品牌蓝条 */
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: inset 0 -1px 0 0 #e5e7eb;
-    }
-
-    h1 {
-        font-size: 2rem !important;
-        font-weight: 850 !important;
-        color: #1e3a8a !important; /* 深蓝色 */
-        letter-spacing: -0.03em;
-        margin: 0 !important;
-    }
-    
-    /* 自定义徽章 */
-    .saas-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        background-color: #2563eb;
-        color: white;
-        margin-bottom: 0.75rem;
-    }
     
     /* ---------------- 交互组件 ---------------- */
     .stTextInput input, .stTextArea textarea {
@@ -119,8 +88,46 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 逻辑部分（保持不变） ---
+# --- 🔒 通讯录专属密码 ---
+CONTACT_PASSWORD = "lhjy" 
+MY_API_KEY = "sk-dzsawqzsktjximglmkzyezbtyhqbysvenoxublemcgertlqp"
+BASE_URL = "https://api.siliconflow.cn/v1"
+
+# 初始化状态
+if "contacts_authenticated" not in st.session_state:
+    st.session_state.contacts_authenticated = False
+if "parseddata_doc" not in st.session_state:
+    st.session_state.parseddata_doc = None
+if "step" not in st.session_state:
+    st.session_state.step = 1
+if "polished_text" not in st.session_state:
+    st.session_state.polished_text = None
+if "original_input" not in st.session_state:
+    st.session_state.original_input = ""
+
+# 3. 侧边栏导航
+with st.sidebar:
+    st.header("⚙️ 体卫艺办公助手")
+    st.success("● AI 核心引擎已连接") 
+    
+    st.markdown("---")
+    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
+    st.markdown("---")
+    st.info("**💡 帮助中心**\n\n如需支持，请联系体卫艺科。")
+    st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
+    st.write("") 
+    if st.button("🔒 安全退出"):
+        st.session_state.contacts_authenticated = False
+        st.session_state.parseddata_doc = None
+        st.rerun()
+
+# ----------------- 模块一：领导公务单生成器 (企业版) -----------------
 if mode == "📝 领导公务单自动生成器":
+    
+    # 顶部导航指引
+    st.caption("↖️ **导航：** 点击左上角 **>** 可切换功能")
+    
+    # 动态渲染进度条 HTML
     s1_class = "step-active" if st.session_state.step == 1 else ""
     s2_class = "step-active" if st.session_state.step == 2 else ""
     
@@ -131,16 +138,26 @@ if mode == "📝 领导公务单自动生成器":
     </div>
     """
     
+    # Hero Header Area (Inline Style)
     st.markdown(f"""
-    <div class="saas-header">
-        <div class="saas-badge">Enterprise Edition V2.5</div>
-        <h1>📋 体卫艺领导公务单自动生成器</h1>
-        <p style="color: #475569; margin-top: 0.5rem; font-weight: 500;">
-            龙华教育局政务专用 · 智能公文系统 | <span style="color: #2563eb;">Tech by Peipei</span>
+    <div style="
+        background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        border-left: 8px solid #2563eb;
+        border-right: 1px solid #e2e8f0;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    ">
+        <div class="saas-badge" style="background-color: #2563eb; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 10px; display: inline-block;">
+            ENTERPRISE EDITION V2.5
+        </div>
+        <h1 style="margin: 0; color: #1e3a8a; font-size: 24px; font-weight: 800;">📋 体卫艺领导公务单自动生成器</h1>
+        <p style="color: #475569; margin-top: 8px; font-size: 14px; font-weight: 500;">
+            龙华教育局政务专用 · 智能公文系统 | <span style="color: #2563eb;">Tech Support by Peipei</span>
         </p>
-    </div>
-    {step_html}
-    """, unsafe_allow_html=True)
     </div>
     {step_html}
     """, unsafe_allow_html=True)
@@ -289,7 +306,7 @@ if mode == "📝 领导公务单自动生成器":
                 filename = f"{mmdd}_{leader_name}_体卫艺劳科_{t}.docx"
                 
                 st.download_button(
-                    label="� 导出正式公文 (Word)",
+                    label="📥 导出正式公文 (Word)",
                     data=bio.getvalue(),
                     file_name=filename,
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -331,3 +348,4 @@ else:
         st.dataframe(df[mask], use_container_width=True, hide_index=True)
     else:
         st.caption("👆 在上方输入关键词开始搜索")
+    
