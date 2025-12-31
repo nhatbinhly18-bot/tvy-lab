@@ -52,19 +52,44 @@ def call_briefing_expert(content):
         "additional_messages": [{"role": "user", "content": content, "content_type": "text"}]
     }
     try:
-        res = requests.post("https://api.coze.cn/v3/chat", headers=headers, json=payload).json()
-        if res.get('code') != 0: return f"⚠️ 接口错误: {res.get('msg')}"
+        # --- 这里的 print 会直接显示在你的黑窗口里，帮我们破案 ---
+        print(f"🚀 发送请求中... 内容：{content}") 
+        res = requests.post("https://api.coze.cn/v3/chat", headers=headers, json=payload, timeout=10).json()
+        
+        if res.get('code') != 0: 
+            print(f"❌ 接口报错: {res.get('msg')}")
+            return f"⚠️ 接口错误: {res.get('msg')}"
         
         chat_id, conv_id = res['data']['id'], res['data']['conversation_id']
-        for _ in range(60):
-            status = requests.get(f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}", headers=headers).json()
-            if status.get('data', {}).get('status') == 'completed':
-                msg = requests.get(f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}&chat_id={chat_id}", headers=headers).json()
-                for m in reversed(msg.get('data', [])):
-                    if m.get('type') == 'answer': return m.get('content')
+        print(f"📡 已建立连接！ChatID: {chat_id}")
+
+        for i in range(60):
+            # 每秒钟在黑窗口汇报一次进度
+            status_url = f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}"
+            status_res = requests.get(status_url, headers=headers).json()
+            curr_status = status_res.get('data', {}).get('status')
+            
+            print(f"⏳ 第 {i+1} 秒，AI 当前状态: {curr_status}") 
+
+            if curr_status == 'completed':
+                print("✅ AI 创作完成！正在抓取文字内容...")
+                msg_url = f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}&chat_id={chat_id}"
+                msg_res = requests.get(msg_url, headers=headers).json()
+                
+                for m in reversed(msg_res.get('data', [])):
+                    if m.get('type') == 'answer': 
+                        print("🎉 成功拿到润色稿！")
+                        return m.get('content')
+            
+            if curr_status == 'failed':
+                print(f"❌ AI 思考失败，原因: {status_res.get('data', {}).get('last_error')}")
+                return "⚠️ AI 思考过程中发生错误"
+                
             time.sleep(1)
-        return "⚠️ 生成超时"
-    except Exception as e: return f"❌ 接口异常: {str(e)}"
+        return "⚠️ 生成超时，AI 思考时间超过了 60 秒"
+    except Exception as e:
+        print(f"💥 程序发生崩溃: {str(e)}")
+        return f"❌ 接口异常: {str(e)}"
 
 # 初始化状态
 if "contacts_authenticated" not in st.session_state:
