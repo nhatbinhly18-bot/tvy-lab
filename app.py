@@ -56,7 +56,7 @@ def call_briefing_expert(content):
         if res.get('code') != 0: return f"⚠️ 接口错误: {res.get('msg')}"
         
         chat_id, conv_id = res['data']['id'], res['data']['conversation_id']
-        for _ in range(15):
+        for _ in range(60):
             status = requests.get(f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}", headers=headers).json()
             if status.get('data', {}).get('status') == 'completed':
                 msg = requests.get(f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}&chat_id={chat_id}", headers=headers).json()
@@ -83,7 +83,7 @@ with st.sidebar:
     st.header("⚙️ 体卫艺办公助手")
     st.success(f"● AI 核心引擎已连接 ({APP_VERSION})")
     st.markdown("---")
-    mode = st.radio("功能切换：", ["✨ 智能简报生成", "📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
+    mode = st.radio("功能切换：", ["✨ 体卫艺简报助手", "📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
     st.markdown("---")
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
     
@@ -97,9 +97,9 @@ with st.sidebar:
 # 3. 核心功能逻辑
 # ==========================================
 
-if mode == "✨ 智能简报生成":
-    st.markdown("# ✨ AI 简报创作中心")
-    st.info("💡 请输入会议/活动的关键信息，AI 笔杆子将为您撰写规范简报。")
+if mode == "✨ 体卫艺简报助手":
+    st.markdown("# ✨ 体卫艺简报助手")
+    st.info("您好！我是擅长将杂乱信息转化为规范政务简讯的小助手，能为您打造高质量的体卫艺相关简报。👇 请直接发送：会议通知 + 参会名单 + 杂乱语音稿")
     
     u_content = st.text_area("✍️ 输入活动信息...", height=150, placeholder="例如：今天下午3点在教育局二楼会议室... （输入后点击下方生成按钮）")
     
