@@ -47,43 +47,34 @@ st.markdown("""
 # --- 核心函数：扣子 API (简报专家) ---
 def call_briefing_expert(content):
     headers = {"Authorization": f"Bearer {COZE_PAT}", "Content-Type": "application/json"}
-    payload = {
-        "bot_id": BOT_ID, "user_id": "peipei_admin", "stream": False,
-        "additional_messages": [{"role": "user", "content": content, "content_type": "text"}]
-    }
+    payload = {"bot_id": BOT_ID, "user_id": "peipei_admin", "stream": False,
+               "additional_messages": [{"role": "user", "content": content, "content_type": "text"}]}
     try:
-        print(f"🚀 发送请求中...") 
         res = requests.post("https://api.coze.cn/v3/chat", headers=headers, json=payload, timeout=10).json()
-        chat_id, conv_id = res['data']['id'], res['data']['conversation_id']
+        chat_id = res['data']['id']
+        conv_id = res['data']['conversation_id']
 
         for i in range(60):
-            status_url = f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}"
-            status_res = requests.get(status_url, headers=headers).json()
+            status_res = requests.get(f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}", headers=headers).json()
             curr_status = status_res.get('data', {}).get('status')
-            
             print(f"⏳ 第 {i+1} 秒，状态: {curr_status}") 
 
             if curr_status == 'completed':
-                print("✅ AI 创作完成！正在抓取...")
-                msg_url = f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}&chat_id={chat_id}"
+                print(f"🚨 [搜救行动] 开始搜寻 Conversation: {conv_id}")
+                # 核心改进：扩大搜索范围，直接查询整个对话历史
+                msg_url = f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}"
                 msg_res = requests.get(msg_url, headers=headers).json()
-                
-                # --- 新增：把 AI 所有的消息类型都打印出来看看 ---
                 messages = msg_res.get('data', [])
-                print(f"🔍 调试信息：AI 一共返回了 {len(messages)} 条消息")
-                for m in messages:
-                    print(f"👉 消息类型: {m.get('type')}, 内容片段: {m.get('content')[:20]}...")
-
+                
+                print(f"� 搜救结果：找到 {len(messages)} 条消息")
                 for m in reversed(messages):
-                    # 修改：不仅找 answer，也尝试抓取任何可能有内容的类型
-                    if m.get('type') in ['answer', 'verbose']: 
-                        print("🎉 成功抓取到内容！")
+                    if m.get('type') == 'answer' and len(m.get('content', '')) > 5:
+                        print("🎉 [成功] 终于抓到文字了！")
                         return m.get('content')
-            
             time.sleep(1)
-        return "⚠️ 超时：AI 写完了但代码没抓到内容"
+        return "⚠️ 超时：搜遍了整间屋子也没找到简报内容"
     except Exception as e:
-        return f"❌ 崩溃报错: {str(e)}"
+        return f"❌ 崩溃: {str(e)}"
 
 # 初始化状态
 if "contacts_authenticated" not in st.session_state:
