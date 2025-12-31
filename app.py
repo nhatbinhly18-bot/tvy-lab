@@ -5,6 +5,7 @@ import io
 import json
 from openai import OpenAI
 from datetime import datetime
+import streamlit.components.v1 as components
 
 # 1. 网页基础配置
 st.set_page_config(page_title="体卫艺办公助手", page_icon="📋", layout="centered")
@@ -169,7 +170,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台"])
+    mode = st.radio("功能切换：", ["📝 领导公务单自动生成器", "🔍 龙华学校查号台", "✨ 智能简报生成"])
     
     st.markdown("---")
     st.info("""
@@ -397,7 +398,13 @@ if mode == "📝 领导公务单自动生成器":
             except Exception as e:
                 st.error(f"生成失败：{e}")
 
-# ----------------- 模块二：龙华学校查号台 -----------------
+# ----------------- 模块二：智能简报生成 -----------------
+elif mode == "✨ 智能简报生成":
+    st.markdown("# ✨ 体卫艺 AI 简报创作中心")
+    st.info("💡 正在连接 DeepSeek V3 智慧大脑... 审核通过后，此处将直接显示对话窗口。")
+    components.iframe("https://www.baidu.com", height=750, scrolling=True)
+
+# ----------------- 模块三：龙华学校查号台 -----------------
 else:
     # 导航提示
     st.caption("↖️ **导航提示：** 点击左上角 **>** 图标打开菜单，可返回「公务单生成器」")
@@ -436,4 +443,4 @@ else:
         st.write(f"📊 搜索结果：找到 {len(df[mask])} 条记录")
         st.dataframe(df[mask], use_container_width=True, hide_index=True)
     else:
-        st.caption("👆 在上方输入关键词开始搜索，支持模糊匹配。") 
+        st.caption("👆 在上方输入关键词开始搜索，支持模糊匹配。")
