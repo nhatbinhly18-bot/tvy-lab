@@ -52,44 +52,38 @@ def call_briefing_expert(content):
         "additional_messages": [{"role": "user", "content": content, "content_type": "text"}]
     }
     try:
-        # --- 这里的 print 会直接显示在你的黑窗口里，帮我们破案 ---
-        print(f"🚀 发送请求中... 内容：{content}") 
+        print(f"🚀 发送请求中...") 
         res = requests.post("https://api.coze.cn/v3/chat", headers=headers, json=payload, timeout=10).json()
-        
-        if res.get('code') != 0: 
-            print(f"❌ 接口报错: {res.get('msg')}")
-            return f"⚠️ 接口错误: {res.get('msg')}"
-        
         chat_id, conv_id = res['data']['id'], res['data']['conversation_id']
-        print(f"📡 已建立连接！ChatID: {chat_id}")
 
         for i in range(60):
-            # 每秒钟在黑窗口汇报一次进度
             status_url = f"https://api.coze.cn/v3/chat/retrieve?chat_id={chat_id}&conversation_id={conv_id}"
             status_res = requests.get(status_url, headers=headers).json()
             curr_status = status_res.get('data', {}).get('status')
             
-            print(f"⏳ 第 {i+1} 秒，AI 当前状态: {curr_status}") 
+            print(f"⏳ 第 {i+1} 秒，状态: {curr_status}") 
 
             if curr_status == 'completed':
-                print("✅ AI 创作完成！正在抓取文字内容...")
+                print("✅ AI 创作完成！正在抓取...")
                 msg_url = f"https://api.coze.cn/v3/chat/message/list?conversation_id={conv_id}&chat_id={chat_id}"
                 msg_res = requests.get(msg_url, headers=headers).json()
                 
-                for m in reversed(msg_res.get('data', [])):
-                    if m.get('type') == 'answer': 
-                        print("🎉 成功拿到润色稿！")
+                # --- 新增：把 AI 所有的消息类型都打印出来看看 ---
+                messages = msg_res.get('data', [])
+                print(f"🔍 调试信息：AI 一共返回了 {len(messages)} 条消息")
+                for m in messages:
+                    print(f"👉 消息类型: {m.get('type')}, 内容片段: {m.get('content')[:20]}...")
+
+                for m in reversed(messages):
+                    # 修改：不仅找 answer，也尝试抓取任何可能有内容的类型
+                    if m.get('type') in ['answer', 'verbose']: 
+                        print("🎉 成功抓取到内容！")
                         return m.get('content')
             
-            if curr_status == 'failed':
-                print(f"❌ AI 思考失败，原因: {status_res.get('data', {}).get('last_error')}")
-                return "⚠️ AI 思考过程中发生错误"
-                
             time.sleep(1)
-        return "⚠️ 生成超时，AI 思考时间超过了 60 秒"
+        return "⚠️ 超时：AI 写完了但代码没抓到内容"
     except Exception as e:
-        print(f"💥 程序发生崩溃: {str(e)}")
-        return f"❌ 接口异常: {str(e)}"
+        return f"❌ 崩溃报错: {str(e)}"
 
 # 初始化状态
 if "contacts_authenticated" not in st.session_state:
