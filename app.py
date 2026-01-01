@@ -49,16 +49,6 @@ st.markdown("""
     /* 隐藏页眉 */
     #MainMenu {visibility: hidden;} footer {visibility: hidden;}
     @media (min-width: 769px) { header {visibility: hidden;} }
-    
-    /* 确保 st.info 内的段落有间距，保持空行效果 */
-    .stAlert p { 
-        margin-bottom: 0.8rem !important; 
-        line-height: 1.6 !important;
-    }
-    .stAlert { 
-        padding: 1rem !important;
-        line-height: 1.8 !important;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -96,14 +86,14 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # 🌟 侧边栏功能说明（确保显示）
-    st.info("""**💡 助手功能说明：**
-
-1. **公务单生成**：
-   语音口语 → 规范公文Word
-   
-2. **学校查号台**：
-   全区通讯录一键查询""")
+    # 🌟 侧边栏功能说明
+    st.markdown("""
+    <div style='background-color: #e3f2fd; padding: 1rem; border-radius: 8px;'>
+        <p style='margin: 0 0 0.8rem 0; font-weight: bold;'>💡 助手功能说明：</p>
+        <p style='margin: 0 0 0.5rem 0;'>1. <strong>公务单生成</strong>：<br>&nbsp;&nbsp;&nbsp;语音口语 → 规范公文Word</p>
+        <p style='margin: 0.5rem 0 0 0;'>2. <strong>学校查号台</strong>：<br>&nbsp;&nbsp;&nbsp;全区通讯录一键查询</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.caption("维护者：孙沛 | 龙华区教育局体卫艺专用")
 
@@ -116,6 +106,16 @@ if mode == "✨ 体卫艺简报助手":
     
     with st.container(border=True):
         st.subheader("📝 智能润色专家")
+        
+        # 添加助手介绍
+        st.markdown("""
+        <div style='background-color: #f0f7ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #667eea;'>
+            <p style='margin: 0; line-height: 1.6; color: #333;'>
+                🤖 我是擅长将杂乱语音稿转化为<strong>体卫艺简报</strong>的小助手！
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.info("👇 **请直接发送：会议通知 + 参会名单 + 杂乱语音稿**")
         st.write("") 
         
@@ -141,13 +141,15 @@ elif mode == "📝 领导公务单自动生成器":
     st.markdown("# 📋 体卫艺领导公务单自动生成器")
     st.caption("Technical Support Provided by Peipei")
 
-    # 🌟 详细提示框（确保有空行和格式）
+    # 🌟 详细提示框（使用自定义HTML确保空行显示）
     st.markdown("""
     <div style='background-color: #e3f2fd; padding: 1.2rem; border-radius: 8px; border-left: 4px solid #1976d2;'>
-        <p style='margin: 0 0 1rem 0; line-height: 1.6;'><strong>💡 智能提示：</strong> 请一次性说清：时间、地点、会议名称、人数、对接人、领导、参加部门及议程。</p>
-        <p style='margin: 1rem 0 0 0; line-height: 1.6;'><strong>🗣️ 参考范例：</strong> "明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。"</p>
+        <p style='margin: 0 0 1.2rem 0; line-height: 1.6;'><strong>💡 智能提示：</strong> 请一次性说清：时间、地点、会议名称、人数、对接人、领导、参加部门及议程。</p>
+        <p style='margin: 0; line-height: 1.6;'><strong>🗣️ 参考范例：</strong> "明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。"</p>
     </div>
     """, unsafe_allow_html=True)
+    
+    st.write("")  # 增加间距
 
     if st.session_state.step == 1:
         with st.container(border=True):
