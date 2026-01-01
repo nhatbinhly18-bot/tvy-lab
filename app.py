@@ -142,10 +142,12 @@ elif mode == "📝 领导公务单自动生成器":
     st.caption("Technical Support Provided by Peipei")
 
     # 🌟 详细提示框（确保有空行和格式）
-    st.info("""**💡 智能提示：** 请一次性说清：时间、地点、会议名称、人数、对接人、领导、参加部门及议程。
-
-**🗣️ 参考范例：** "明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。"
-""")
+    st.markdown("""
+    <div style='background-color: #e3f2fd; padding: 1.2rem; border-radius: 8px; border-left: 4px solid #1976d2;'>
+        <p style='margin: 0 0 1rem 0; line-height: 1.6;'><strong>💡 智能提示：</strong> 请一次性说清：时间、地点、会议名称、人数、对接人、领导、参加部门及议程。</p>
+        <p style='margin: 1rem 0 0 0; line-height: 1.6;'><strong>🗣️ 参考范例：</strong> "明天上午10点在二楼多功能厅有个生涯教育座谈会，大概20人，孙沛对接，1小时，邀请灵芝主任参加。"</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     if st.session_state.step == 1:
         with st.container(border=True):
